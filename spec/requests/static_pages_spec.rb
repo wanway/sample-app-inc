@@ -1,75 +1,46 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe "静态页面测试之" do
-  
+describe "静态页面测试之 -> " do
+
+  subject {page}  
+
   describe "关于首页：" do
     
-    it "页面中必须包含 'sample app'" do
-      # Run the generator again with the --webrat flag if you want to use webrat methods/matchers
-      # get static_pages_index_path
-      visit '/static_pages/home'
-      # response.status.should be(200)
-      expect(page).to have_content('sample app')
-    end
+    before { visit root_path }
 
-    it "标题中必须包含 Welcome all of you" do
-      # Run the generator again with the --webrat flag if you want to use webrat methods/matchers
-      # get static_pages_index_path
-      visit '/static_pages/home'
-      # response.status.should be(200)
-      expect(page).to have_title("Welcome all of you")
-    end
-
-    it "标题中必须不包含'首页'字样" do
-      visit '/static_pages/home'
-      expect(page).not_to have_title('| 首页')
-    end
-
-    it "h1标签中必须包含'首页'" do
-    	visit '/static_pages/home'
-    	page.should have_selector('h1', :text => '首页')
-    end
+    it { should have_content('sample app') }
+    it { should have_title(full_title(""))}
+    it { should_not have_title('| 首页') }
+    it { should have_selector('h1', :text => '首页') }
 
   end
 
   describe "关于帮忙页面：" do
     
-    it "页面中必须包含'help me'" do
-      # Run the generator again with the --webrat flag if you want to use webrat methods/matchers
-      # get static_pages_index_path
-      visit '/static_pages/help'
-      # response.status.should be(200)
-      expect(page).to have_content('help me')
-    end
+    before { visit help_path }
 
-	it "标题中必须包含'帮助'" do
-      # Run the generator again with the --webrat flag if you want to use webrat methods/matchers
-      # get static_pages_index_path
-      visit '/static_pages/help'
-      # response.status.should be(200)
-      expect(page).to have_title('帮助')
-    end
+    it { should have_content('help me') }
+    it { should have_title('帮助') }
 
   end
 
-   describe "对于关于页面：" do
+  describe "对于关于页面：" do
     
-    it "页面中必须包含'about me'" do
-      # Run the generator again with the --webrat flag if you want to use webrat methods/matchers
-      # get static_pages_index_path
-      visit '/static_pages/about'
-      # response.status.should be(200)
-      expect(page).to have_content('about me')
-    end
+    before { visit about_path }
 
-    it "标题中必须包含'关于我们'" do
-      # Run the generator again with the --webrat flag if you want to use webrat methods/matchers
-      # get static_pages_index_path
-      visit '/static_pages/about'
-      # response.status.should be(200)
-      expect(page).to have_title('关于我们')
-    end
+    it { should have_content('about me') }
+    it { should have_title('关于我们') }
+
+  end
+
+  describe "对于联系我们页面：" do
+    
+    before { visit contact_path }
+
+    it { should have_content('联系我们') }
+    it { should have_title("联系我们") }
+
   end
 
 end
