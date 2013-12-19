@@ -109,4 +109,14 @@ describe User do
     it { should be_valid }
   end
 
+  describe "email 大小写" do
+    let(:mixed_case_email) { "Wanway0311@GMAIL.COM" }
+
+    it "必须全部以小写保存" do
+      @user.email = mixed_case_email
+      @user.save
+      expect(@user.reload.email).to eq mixed_case_email.downcase
+    end
+  end
+
 end
