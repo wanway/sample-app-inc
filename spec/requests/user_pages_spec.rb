@@ -14,4 +14,15 @@ describe "用户页面测试之：" do
 
   end
 
+  describe "关于 用户显示 页面" do
+  	
+  	let(:user) { FactoryGirl.create(:user) }
+  	
+  	before { visit user_path(user) }
+
+	it { should have_title(user.name) }
+
+	it { should have_selector("h1", text: user.name) }
+
+  end
 end
