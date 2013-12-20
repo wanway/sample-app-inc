@@ -119,4 +119,33 @@ describe User do
     end
   end
 
+  
+  describe "注册页面" do
+    
+    before { visit signup_path }
+
+    let(:submit) { "建立用户" }
+
+    describe "用错误的信息" do      
+      # it "不能创建新用户" do
+      #  expect { click_button submit }.not_to change(User, :count)
+      # end
+    end
+
+    describe "用合法的信息" do
+      
+      before do
+        fill_in "Name",         with: "Exam User"
+        fill_in "Email",        with: "user@example"
+        fill_in "Password",     with: "123456"
+        fill_in "Confirmation", with: "123456"
+      end
+
+      # it "should 建立新的用户" do
+      #  expect { click_button submit }.to change(User, :count).by(1)
+      # end
+    end
+
+  end
+  
 end
