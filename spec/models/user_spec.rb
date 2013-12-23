@@ -13,6 +13,7 @@ describe User do
   it { should respond_to :email }
   it { should respond_to :password }
   it { should respond_to :password_confirmation }
+  it { should respond_to :remember_token }
   it { should respond_to :password_digest }
   it { should respond_to :authenticate }
   it { should be_valid }
@@ -146,6 +147,11 @@ describe User do
       # end
     end
 
+  end
+
+  describe "记住唯一标识符" do
+    before { @user.save }
+    its(:remember_token) { should_not be_blank }
   end
   
 end
