@@ -8,7 +8,8 @@ class SessionsController < ApplicationController
 		if user && user.authenticate(params[:session][:password])
 			# 在 sessions_helper.rb 中有定义
 			sign_in user
-			redirect_to user
+			# redirect_to user
+			redirect_back_or user
 		else
 			flash.now[:error] = '用户名或者密码错误!'
 			render 'new'
