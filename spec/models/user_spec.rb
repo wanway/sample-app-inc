@@ -16,7 +16,18 @@ describe User do
   it { should respond_to :remember_token }
   it { should respond_to :password_digest }
   it { should respond_to :authenticate }
+  it { should respond_to :admin }
   it { should be_valid }
+  it { should_not be_admin }
+
+  describe "with admin attribute set to 'true'" do
+    before do
+      @user.save!
+      @user.toggle!(:admin)
+    end
+
+    it { should be_admin }
+  end
 
   describe "如果名字为空，则不能通过" do  	
   	before { @user.name = "" }
@@ -107,7 +118,7 @@ describe User do
 
   describe "密码太短时" do
     before { @user.password = @user.password_confirmation = "w" * 5 }
-    it { should be_valid }
+    it { should_not be_valid }
   end
 
   describe "email 大小写" do

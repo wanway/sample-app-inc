@@ -40,6 +40,32 @@ describe "用户页面测试之：" do
       end
     end
 
+    describe "删除链接" do
+
+      it { should_not have_link('删除') }
+
+      describe "如果是管理员" do
+
+        let(:admin) { FactoryGirl.create(:admin) }
+
+        before do
+          sign_in admin
+          visit users_path
+        end
+
+        it { should have_link('删除', href: user_path(User.first)) }
+
+        it "可以删除其它用户" do
+          expect do
+            click_link('删除', match: :first)
+          end.to change(User, :count).by(-1)
+        end
+
+        it { should_not have_link('delete', href: user_path(admin)) }
+        
+      end
+    end
+
   end
 
   describe "关于 新用户注册 页面" do
