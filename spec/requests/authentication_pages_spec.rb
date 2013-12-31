@@ -35,7 +35,7 @@ describe "AuthenticationPages" do
         before { sign_in user }
 
     	it { should have_title(user.name) }
-    	it { should have_link('用户列表', href: users_path) }
+    	# it { should have_link('用户列表', href: users_path) }
         it { should have_link('个人资料', href: user_path(user)) }
         it { should have_link('设置', href: edit_user_path(user)) }
     	it { should have_link('登出', href: signout_path) }
@@ -81,6 +81,7 @@ describe "AuthenticationPages" do
                     before { visit users_path }
                     it { should have_title("登陆") }
                 end
+            
             end
 
             describe "如果访问了一个受保护的页面" do
@@ -97,7 +98,21 @@ describe "AuthenticationPages" do
                         expect(page).to have_title("修改用户")
                     end
                 end
+            
             end
+
+            describe "在微博控制器中" do
+                describe "提交一个创建微博请求" do
+                    before { post microposts_path }
+                    specify { expect(response).to redirect_to(signin_path) }
+                end
+
+                describe "提交一个删除请求" do
+                    before { delete micropost_path(FactoryGirl.create(:micropost)) }
+                    specify { expect(response).to redirect_to(signin_path) }
+                end
+            end
+
         end
 
         describe "错误的用户" do
@@ -128,12 +143,13 @@ describe "AuthenticationPages" do
             let(:user) { FactoryGirl.create(:user) }
             let(:non_admin) { FactoryGirl.create(:user) }
 
-            before { sign_in non_admin, no_capybara: ture }
+            before { sign_in non_admin, no_capybara: true }
 
             describe "发送一个 DELETE 请求到 Users#destory action" do
                 before { delete user_path(user) }
                 specify { expect(response).to redirect_to(root_path) }
             end
+        
         end
     end
     

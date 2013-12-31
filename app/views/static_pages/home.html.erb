@@ -1,3 +1,19 @@
+<% if signed_in? %>
+	<div class="row">
+		<aside class="span4">
+			<section>
+				<%= render 'shared/user_info' %>
+			</section>
+			<section>
+				<%= render 'shared/micropost_form' %>
+			</section>
+		</aside>
+		<div class="span8">
+			<h3>微博流</h3>
+			<%= render 'shared/feed' %>
+		</div>
+	</div>
+<% else %>
 <div class="center hero-unit">
 	
 	<h1>首页</h1>
@@ -20,3 +36,4 @@
 <%= link_to image_tag("logo11w.png", class: "img-circle", alt: "Google"), "https://www.google.com/", target: "_blank" %>
 <%= link_to image_tag("thinkpad.jpg", class: "img-circle", alt: "thinkpad"), "http://www.lenovo.com/", target: "_blank" %>
 </div>
+<% end %>

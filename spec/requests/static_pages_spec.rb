@@ -21,6 +21,25 @@ describe "静态页面测试之 -> " do
 
     it { should_not have_title('| 首页') }
 
+    describe "登陆用户" do
+
+      let(:user) { FactoryGirl.create(:user) }
+
+      before do
+        FactoryGirl.create(:micropost, user: user, content: "First")
+        FactoryGirl.create(:micropost, user: user, content: "Second")
+        sign_in user
+        visit root_path
+      end
+
+      it "会更新到首页" do
+        user.feed.each do |item|
+          expect(page).to have_selector("li##{item.id}", text: item.content)
+        end
+      end
+      
+    end
+
   end
 
   describe "关于 获得帮助 页面：" do
