@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'spec_helper'
 
 describe Relationship do
@@ -16,6 +17,16 @@ describe Relationship do
   	it { should respond_to(:followed) }
   	its(:follower) { should eq follower }
   	its(:followed) { should eq followed }
+  end
+
+  describe "被关注者ID没有设置" do
+    before { relationship.followed_id = nil }
+    it { should_not be_valid }
+  end
+
+  describe "关注者ID没有设置" do
+    before { relationship.follower_id = nil }
+    it { should_not be_valid }
   end
 
 end

@@ -37,6 +37,20 @@ describe "静态页面测试之 -> " do
           expect(page).to have_selector("li##{item.id}", text: item.content)
         end
       end
+
+      describe "关注与粉丝数量" do
+
+        let(:other_user) { FactoryGirl.create(:user) }
+
+        before do
+          other_user.follow!(user)
+          visit root_path
+        end
+
+        it { should have_link("关注 0", href: following_user_path(user)) }
+        it { should have_link("粉丝 1", href: follower_user_path(user)) }
+
+      end
       
     end
 

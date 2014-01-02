@@ -134,4 +134,97 @@ describe "用户页面测试之：" do
     end
     
   end
+
+  describe "关于 关注、粉丝 页面" do
+
+    let(:user) { FactoryGirl.create(:user) }
+    let(:other_user) { FactoryGirl.create(:user) }
+    before { user.follow!(other_user) }
+
+    describe "粉丝" do
+      before do
+        sign_in user
+        visit following_user_path(user)
+      end
+
+      it { should have_title(full_title('粉丝')) }
+      it { should have_selector('h3', text: "粉丝") }
+      it { should have_link(other_user.name, href: user_path(other_user)) }
+    
+    end
+
+    describe "我关注的" do
+      before do
+        sign_in other_user
+        visit followers_user_path(other_user)
+      end
+
+      it { should have_title(full_title('关注')) }
+      it { should have_selector('h3', text: '关注') }
+      it { should have_link(user.name, href: user_path(user)) }
+
+    end
+
+    # 这里可能有问题
+    describe "关注、取消关注按钮" do
+
+      let(:other_user) { FactoryGirl.create(:user) }
+      before { sign_in user }
+
+      describe "关注一个用户" do
+        before { visit user_path(other_user) }
+
+        it "应该增加粉丝的数量" do
+
+          expect do
+            click_button "关注"
+          end.to change(user.followed_users, :count).by(1)
+
+        end
+
+        it "应该增加其它用户关注的人数" do
+
+          expect do
+            click_button "关注"
+          end.to change(other_user.followers, :count).by(1)
+
+        end
+
+        describe "按钮应该有所变化" do
+          before { click_button "关注" }
+          it { should have_xpath("//input[@value='取沙关注']") }
+        end
+
+      end
+
+      describe "取消关注一个用户" do
+
+        before do
+          user.follow!(other_user)
+          visit user_path(other_user)
+        end
+
+        it "应该减少一个粉丝" do
+          expect do
+            click_button "取消关注"
+          end.to change(user.followed_users, :count).by(-1)
+        end
+
+        it "应该减少其它用户关注数" do
+          expect do
+            click_button "取消关注"
+          end.to change(other_user.followers, :count).by(-1)
+        end
+
+        describe "按钮应该要变换" do
+          before { click_button "取消关注" }
+          it { should have_xpath("//input[@value='关注']") }
+        end
+
+      end
+
+    end
+    
+  end
+
 end

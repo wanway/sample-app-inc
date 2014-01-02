@@ -1,7 +1,7 @@
 # encoding: utf-8
 class UsersController < ApplicationController
 
-  before_action :signed_in_user, only: [:index, :edit, :update]
+  before_action :signed_in_user, only: [:index, :edit, :update, :destroy, :following, :followers]
   before_action :correct_user, only: [:edit, :update]
   before_action :admin_user, only: :destroy
   
@@ -47,6 +47,20 @@ class UsersController < ApplicationController
     User.find(params[:id]).destroy
     flash[:success] = "用户被删除了"
     redirect_to users_url
+  end
+
+  def following
+    @title = "粉丝"
+    @user = User.find(params[:id])
+    @users = @user.followed_users.paginate(page: params[:page])
+    render 'show_follow'
+  end
+
+  def followers
+    @title = "关注"
+    @user = User.find(params[:id])
+    @users = @user.followers.paginate(page: params[:page])
+    render 'show_follow'
   end
 
   private

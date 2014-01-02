@@ -81,6 +81,16 @@ describe "AuthenticationPages" do
                     before { visit users_path }
                     it { should have_title("登陆") }
                 end
+
+                describe "访问关注页面" do
+                    before { visit following_user_path(user) }
+                    it { should have_title("登陆") }
+                end
+
+                describe "访问粉丝页面" do
+                    before { visit followers_user_path(user) }
+                    it { should have_title("登陆") }
+                end
             
             end
 
@@ -111,6 +121,21 @@ describe "AuthenticationPages" do
                     before { delete micropost_path(FactoryGirl.create(:micropost)) }
                     specify { expect(response).to redirect_to(signin_path) }
                 end
+            
+            end
+
+            describe "在关系控制器中" do
+
+                describe "提交一个创建请求" do
+                    before { post relationships_path }
+                    specify { expect(response).to redirect_to(signin_path) }
+                end
+
+                describe "提交一个删除请求" do
+                    before { delete relationship_path(2) }
+                    specify { expect(response).to redirect_to(signin_path) }
+                end
+
             end
 
         end
