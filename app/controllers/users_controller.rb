@@ -11,7 +11,11 @@ class UsersController < ApplicationController
 
   def show
   	@user = User.find(params[:id])
-    @microposts = @user.microposts.paginate(page: params[:page])
+    # @microposts = @user.microposts.paginate(page: params[:page])
+    # 用一个类方法，将所附属的回复也调用出来了。
+    # 没派上用场，实际上，根据用户 ID 本身就可以调出所有的微博，包括回复，所以
+    # 以上这一条是多此一举，仅为知道如何用这个。
+    @microposts = @user.microposts_all.paginate(page: params[:page])
   end
   
   def new
@@ -50,14 +54,14 @@ class UsersController < ApplicationController
   end
 
   def following
-    @title = "粉丝"
+    @title = "关注"
     @user = User.find(params[:id])
     @users = @user.followed_users.paginate(page: params[:page])
     render 'show_follow'
   end
 
   def followers
-    @title = "关注"
+    @title = "粉丝"
     @user = User.find(params[:id])
     @users = @user.followers.paginate(page: params[:page])
     render 'show_follow'

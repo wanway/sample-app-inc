@@ -94,6 +94,31 @@ describe "用户页面测试之：" do
       it { should have_content( user.microposts.count ) }
     end
 
+    describe "关于回复功能" do
+
+      describe "应该有 '回复' 2字" do
+        it { should_not have_link('回复')}
+      end
+
+      describe "应该有包含文件" do
+        it { should have_xpath('//*[@id="myModal"]') }
+      end
+
+    end
+
+    describe "登陆之后，访问 show 页面" do
+
+      before do
+        sign_in user
+        visit user_path(user)
+      end
+
+      it "应该有回复2字" do
+        # /microposts/1/reply
+        expect(page).should have_link('回复', href: reply_user_path)
+      end
+    end
+
   end
 
   describe "关于 修改用户 页面" do
@@ -141,38 +166,49 @@ describe "用户页面测试之：" do
     let(:other_user) { FactoryGirl.create(:user) }
     before { user.follow!(other_user) }
 
-    describe "粉丝" do
+    describe "我关注的" do
       before do
         sign_in user
         visit following_user_path(user)
       end
 
-      it { should have_title(full_title('粉丝')) }
-      it { should have_selector('h3', text: "粉丝") }
+      it { should have_title(full_title('关注')) }
+      it { should have_selector('h3', text: "关注") }
       it { should have_link(other_user.name, href: user_path(other_user)) }
     
     end
 
-    describe "我关注的" do
+    describe "粉丝" do
       before do
         sign_in other_user
         visit followers_user_path(other_user)
       end
 
-      it { should have_title(full_title('关注')) }
-      it { should have_selector('h3', text: '关注') }
+      it { should have_title(full_title('粉丝')) }
+      it { should have_selector('h3', text: '粉丝') }
       it { should have_link(user.name, href: user_path(user)) }
 
     end
 
     # 这里可能有问题
-    describe "关注、取消关注按钮" do
+    describe "[关注、取消关注按钮]" do
 
       let(:other_user) { FactoryGirl.create(:user) }
-      before { sign_in user }
+      before do
+        sign_in user
+
+        # add by wanway: 不论什么情况，上来先将他们的关系删除掉，原因是上面初始化的时候，是关注的
+        if user.following?(other_user)
+          user.unfollow!(other_user)         
+        end
+      end
 
       describe "关注一个用户" do
         before { visit user_path(other_user) }
+
+        it "此时 other_user 应该未被关注" do
+          expect(user.following?(other_user)).to be_false
+        end
 
         it "应该增加粉丝的数量" do
 
@@ -192,7 +228,7 @@ describe "用户页面测试之：" do
 
         describe "按钮应该有所变化" do
           before { click_button "关注" }
-          it { should have_xpath("//input[@value='取沙关注']") }
+          it { should have_xpath("//input[@value='取消关注']") }
         end
 
       end

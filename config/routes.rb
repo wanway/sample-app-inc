@@ -7,7 +7,7 @@ SampleApp::Application.routes.draw do
   end
 
   resources :sessions,      only: [:new, :create, :destroy]
-  resources :microposts,    only: [:create, :destroy]
+  resources :microposts,    only: [:create, :destroy, :show, :new]
   resources :relationships, only: [:create, :destroy]
   
   root 'static_pages#home'
@@ -32,6 +32,7 @@ SampleApp::Application.routes.draw do
 
   # Example of named route that can be invoked with purchase_url(id: product.id)
   #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
+      get 'microposts/:id/reply' => 'microposts#reply', as: :reply_user
 
   # Example resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products

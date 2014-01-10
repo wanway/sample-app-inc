@@ -1,3 +1,16 @@
 <% provide(:title, "获得帮助") %>
 <h1>获得帮助</h1>
 <p>获得帮助</p>
+<div id="wanway">wanway</div>
+
+<!-- 方法一：form_tag -->
+<%= form_tag("/help", method: :get, remote: true) %>
+<%= hidden_field_tag :name, :wanway %>
+<%= submit_tag "abc" %>
+</form>
+
+<!-- 方法二：form_for -->
+<%= form_for("/help", html: { method: :get }, remote: true) do |f| %>
+	<div><%= f.hidden_field :followed_id %></div>
+	<%= f.submit "关注", class: "btn btn-large btn-primary" %>
+<% end %>

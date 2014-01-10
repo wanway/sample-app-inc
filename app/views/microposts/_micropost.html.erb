@@ -3,9 +3,22 @@
 	<span class="timestamp">
 		发布时间：<%= time_ago_in_words(micropost.created_at) %> 之前。
 	</span>
+	<div id="reply_<%= micropost.id %>"></div>
+	<% if signed_in? %>
+		<%= form_tag(micropost, method: :get, remote: true) %>
+			<%= submit_tag "回复" %>
+		</form>
+	<% end %>
 	<% if current_user?(micropost.user) %>
 		<%= link_to "删除", micropost, method: :delete,
 									   data: {confirm: "删除操作不可恢复，你确定吗？"},
 									   title: micropost.content %>
 	<% end %>
 </li>
+<div class="reply_width" id="in_reply_to_<%= micropost.id %>">
+	<% if micropost.replies.any? %>
+		<% micropost.replies.each do |reply| %>
+			<li><%= reply.content %></li>
+		<% end %>
+	<% end %>
+</div>

@@ -7,6 +7,12 @@ class StaticPagesController < ApplicationController
   end
 
   def help
+    @user = User.first
+
+    respond_to do |format|
+      format.html
+      format.js
+    end
   end
 
   def about

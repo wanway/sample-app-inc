@@ -1,0 +1,9 @@
+<blockquote>
+<%= form_for(@reply, method: :post,remote: true) do |f| %>
+	<div class='errors'></div>
+	<%= f.text_area :content, value: "@#{current_user.name} " %>
+	<%= f.hidden_field :in_reply_to, value: "#{@micropost.in_reply_to.nil? ? @micropost.id : @micropost.in_reply_to}" %>
+	<%= f.hidden_field :user_id, value: "#{current_user.id}" %>
+	<%= f.submit "发布回复" %>
+<% end %>
+</blockquote>

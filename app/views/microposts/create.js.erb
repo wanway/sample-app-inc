@@ -1,0 +1,32 @@
+var el = $("new_micropost")
+
+<% if @micropost.errors.any? %>
+
+	var errors = $('<ul />');
+
+	<% @micropost.errors.full_messages.each do |error| %>
+
+		errors.append('<li><%= escape_javascript(error) %></li>')
+
+	<% end %>
+
+	el.find('.errors').html(errors)
+
+<% else %>
+
+	/* 管用，但有一个 lastest id 没有
+	$("#in_reply_to_<%= @micropost.in_reply_to %>").prepend("<%= escape_javascript(
+		simple_format( @micropost.content )
+	) %>"); */
+
+	// 没起到作用，但我写的可以实际这些功能。
+	// el.find('input:text,textarea').val('');
+	// el.find('.errors').empty();
+	
+	// 已下是自己写的，anyway 管用
+	$("#in_reply_to_<%= @micropost.in_reply_to %>").prepend("<%= escape_javascript(render('microposts/reply')) %>")
+	$("#lastest").css({ color: "red", fontWeight: "bold" })
+	$("#lastest").animate({ fontSize: "2em", width: "+=20%", backgroundColor: "green"})
+	$("#reply_<%= @micropost.in_reply_to %>").hide("slow")
+
+<% end %>
