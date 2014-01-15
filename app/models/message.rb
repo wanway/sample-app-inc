@@ -7,4 +7,10 @@ class Message < ActiveRecord::Base
 	validates :user_id, presence: true
 	validates :receive_user_id, presence: true
 
+	# 通过解析出 message 中的 content 中的内容来找出用户
+    def self.find_contet_from_message_content(content)
+      content =~ /^d (\S+) (\S+)/
+      $2
+    end
+
 end

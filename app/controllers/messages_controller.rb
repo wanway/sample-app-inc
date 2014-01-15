@@ -4,31 +4,23 @@ class MessagesController < ApplicationController
 
 	def create
 		
-		# 从表单提交过来的私信中，包含有[ d 用户名 内容 ]，
-		# 而私信的字段是 id、content、user_id（发送者的ID）、receive_user_id（接收者的ID）
-		# 所以，我需要从提交过来的混合体中分享出内容和接收者
-
-		# 以下这个的作用是，找到接收者
-		# 虽然能大体达到效果，
-		# 		但后面的 Message.new(content: message_params) 是为了构建一个 message 对象而为，没有实际作用
-		# 		需要改正
-		@receive_user = User.find_user_from_message_content(Message.new(content: message_params)
+		# 从提交过来的数据中，找出收件人
+		@receive_user = User.find_user_from_message_content(message_params[:content])
 		
-		# 以下这个的作用是，找到内容
-		# 虽然能达到效果，
-		#		但这貌似不是对象的写法，需要改正，这个方法定义在 messages_helper.rb 中		
-		@content = find_content_from(message_params)
+		# 从提交过来的数据中，找出真正的内容
+		#（疑问：这个方法很奇怪，因为并没有查询数据库，是否可以写成一般方法，需要如何写呢）
+		@content = Message.find_contet_from_message_content(message_params[:content])
 
-		
-		# 准备完毕，建立一条私信
-		@message = current_user.messages.build(content: @content, receive_user_id: @receive_user.id)
+		# 建立一条完整的私信，出错：undefined method `id' for nil:NilClass
+		@message = current_user.messages.build(content: @content, receive_user_id: @receive_user.id) if !@receive_user.nil?
 
 		respond_to do |format|
-			if @message.save
+			if !@message.nil? && @message.save
+				flash[:alert] = "私信发送成功"
 				format.html { redirect_to root_url, :layout => !request.xhr? }
 			else
-				@feed_items = []
-				format.html { render 'static_pages/home', :layout => !request.xhr? }
+				flash[:error] = "你没有关注该用户或者该用户不存在"
+				format.html { redirect_to root_url }
 			end
 		end
 	end
@@ -38,16 +30,4 @@ class MessagesController < ApplicationController
 		def message_params
 			params.require(:message).permit(:content)
 		end
-
-		# 从表单发送的私信内容中，分离出真正的内容
-		def find_content_from(content)
-			content =~ /^d (\S+) (\S+)/
-			$2
-		end
 end
-
-# 我的问题是
-
-# 1、刚才从表单过来的值，我用 User.find_user_from_message_content 是不是有问题啊，怎么样写，会比较正确。
-
-# 2、刚才从表单过来的值，我用 find_content_from(message_params) 这个 help 方法，是不是也是错的，正确的思路是怎么样的

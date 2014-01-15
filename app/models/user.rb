@@ -40,8 +40,8 @@ class User < ActiveRecord::Base
     end
 
     # 通过解析出 message 中的 content 中的内容来找出用户
-    def self.find_user_from_message_content(message)
-      message.content =~ /^d (\S+) (\S+)/
+    def self.find_user_from_message_content(content)
+      content =~ /^d (\S+) (\S+)/
       User.find_by(name: $1)
     end
 
