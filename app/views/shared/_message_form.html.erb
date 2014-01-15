@@ -1,0 +1,7 @@
+<%= form_for(@message) do |f| %>
+	<%= render 'shared/error_messages', object: f.object %>
+	<div class="field">
+		<%= f.text_area :content, placeholder: "发私信给他" %>
+	</div>
+	<%= f.submit "发私信", id: "message_commit", class: "btn btn-large btn-primary" %>
+<% end %>

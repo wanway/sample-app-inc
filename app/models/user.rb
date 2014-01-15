@@ -39,6 +39,17 @@ class User < ActiveRecord::Base
       Micropost.including_replies(self)
     end
 
+    # 通过解析出 message 中的 content 中的内容来找出用户
+    def self.find_user_from_message_content(message)
+      message.content =~ /^d (\S+) (\S+)/
+      User.find_by(name: $1)
+    end
+
+    def self.from_users_followed_by(user)
+      followed_user_ids = "SELECT followed_id FROM relationships WHERE follower_id = :user_id"
+      where("user_id IN (#{followed_user_ids}) OR user_id = :user_id", user_id: user)
+    end
+
   	def following?(other_user)
   		relationships.find_by(followed_id: other_user.id)
   	end

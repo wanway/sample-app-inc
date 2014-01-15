@@ -6,10 +6,40 @@
 			</section>
 			<section>
 				<%= render 'shared/stats' %>
-			</section>
+			</section>			
 			<section>
 				<%= render 'shared/micropost_form' %>
+				<%= render 'shared/message_form' %>
+				<p>小技巧：</p>
+				<blockquote><p>d 人名 内容</p><small>按以上格式可以发私信</small></blockquote>
 			</section>
+<script type="text/javascript">
+// 初始状态：显示发微博框，隐藏发私信框
+$("#new_micropost").show()
+$("#new_message").hide()
+// 根据条件来显隐这两个框
+$("#micropost_content").keyup(function(){
+	if (this.value.match(/^d \S+ \S+/)) {
+		$("#new_micropost").hide()
+		$("#new_message").show()
+		$("#message_content").focus()
+		$("#message_content").val(this.value)}
+	//else {
+	//	$("#new_micropost").show()
+	//	$("#new_message").hide()}
+	})
+$("#message_content").keyup(function(){
+	if (this.value.match(/^d \S+ \S+/)) {
+		//$("#new_message").show()
+		//$("#new_micropost").hide()
+	}
+	else {
+		$("#new_micropost").show()
+		$("#new_message").hide()
+		$("#micropost_content").focus()
+		$("#micropost_content").val(this.value)}
+})
+</script>
 		</aside>
 		<div class="span8">
 			<h3>微博流</h3>
