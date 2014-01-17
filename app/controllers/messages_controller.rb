@@ -19,6 +19,7 @@ class MessagesController < ApplicationController
 				flash[:alert] = "私信发送成功"
 				format.html { redirect_to root_url, :layout => !request.xhr? }
 			else
+				@message = []
 				flash[:error] = "你没有关注该用户或者该用户不存在"
 				format.html { redirect_to root_url }
 			end

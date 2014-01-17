@@ -14,7 +14,8 @@ class MicropostsController < ApplicationController
 				format.js { render :status => :created, :location => @micropost, :layout => !request.xhr? }
 			else
 				@feed_items = []
-				format.html { render 'static_pages/home', :layout => !request.xhr? }
+				flash[:error] = "微博内容不能为空"
+				format.html { redirect_to root_url, :layout => !request.xhr? }
 				format.js { render :status => :unprocessable_entity }
 			end
 		end
