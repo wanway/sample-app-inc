@@ -9,7 +9,7 @@ class Message < ActiveRecord::Base
 
 	# 通过解析出 message 中的 content 中的内容来找出用户
     def self.find_contet_from_message_content(content)
-      content =~ /^d (\S+) (.+)/
+      content =~ /^d (\S+) (\S+)/
       $2
     end
 

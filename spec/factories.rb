@@ -14,4 +14,10 @@ FactoryGirl.define do
 		content "test content"
 		user
 	end
+
+	factory :message do
+		content "test message"
+		user
+		receive_user "user"
+	end
 end
